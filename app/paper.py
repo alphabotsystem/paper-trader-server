@@ -40,7 +40,7 @@ class PaperTraderServer(object):
 
 		self.cache = {}
 
-	def exit_gracefully(self):
+	def exit_gracefully(self, signum, frame):
 		print("[Startup]: Paper Trader Server handler is exiting")
 		self.isServiceAvailable = False
 
