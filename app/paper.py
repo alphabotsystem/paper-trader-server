@@ -207,8 +207,6 @@ class PaperTraderServer(object):
 
 if __name__ == "__main__":
 	environ["PRODUCTION_MODE"] = environ["PRODUCTION_MODE"] if "PRODUCTION_MODE" in environ and environ["PRODUCTION_MODE"] else ""
-	print("[Startup]: Paper Trader Server is in startup, running in {} mode.".format("production" if environ["PRODUCTION_MODE"] else "development"))
-
 	if not environ["PRODUCTION_MODE"]: exit(0)
 	paperTraderServer = PaperTraderServer()
 	paperTraderServer.run()
