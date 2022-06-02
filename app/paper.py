@@ -110,8 +110,8 @@ class PaperTraderServer(object):
 
 			if order["timestamp"] < time() - 86400 * 30.5 * 3:
 				if environ["PRODUCTION_MODE"]:
-					database.document("discord/properties/messages/{}".format(str(uuid4()))).set({
-						"title": "Paper {} order of {} {} at {} {} expired.".format(order["orderType"].replace("-", " "), order["amountText"], ticker.get("base"), order["price"], ticker.get("quote")),
+					database.document(f"discord/properties/messages/{str(uuid4())}").set({
+						"title": f"Paper {order['orderType']} order of {order['amountText']} {ticker.get('base')} at {order['price']} {ticker.get('quote')} expired.",
 						"subtitle": "Alpha Paper Trader",
 						"description": "Paper orders automatically cancel after 3 months. If you'd like to keep your order, you'll have to set it again.",
 						"color": 6765239,
@@ -121,7 +121,7 @@ class PaperTraderServer(object):
 					reference.delete()
 
 				else:
-					print("{}: paper {} order of {} {} at {} expired".format(order["orderType"].replace("-", " "), order["amountText"], ticker.get("base"), order["price"], ticker.get("quote")))
+					print(f"{accountId}: paper {order['orderType']} order of {order['amountText']} {ticker.get('base')} at {order['price']} {ticker.get('quote')} expired")
 
 			else:
 				if hashName in self.cache:
@@ -183,12 +183,11 @@ class PaperTraderServer(object):
 								baseBalance[base] = baseBalance.get(base, 0) - execAmount
 								quoteBalance[quote] = quoteBalance.get(quote, 0) + execAmount * order["price"]
 
-							order["status"] = "filled"
-							database.document("details/paperOrderHistory/{}/{}".format(accountId, orderId)).set(order)
-							database.document("accounts/{}".format(accountId)).set({"paperTrader": accountProperties["paperTrader"]}, merge=True)
+							database.document(f"details/paperOrderHistory/{accountId}/{orderId}").set(order)
+							database.document(f"accounts/{accountId}").set({"paperTrader": accountProperties["paperTrader"]}, merge=True)
 
-							database.document("discord/properties/messages/{}".format(str(uuid4()))).set({
-								"title": "Paper {} order of {} {} at {} {} was successfully executed.".format(order["orderType"].replace("-", " "), order["amountText"], ticker.get("base"), order["price"], ticker.get("quote")),
+							database.document(f"discord/properties/messages/{str(uuid4())}").set({
+								"title": f"Paper {order['orderType']} order of {order['amountText'],} {ticker.get('base')} at {order['price']} {ticker.get('quote')} was successfully executed.",
 								"subtitle": "Alpha Paper Trader",
 								"color": 6765239,
 								"user": authorId
@@ -196,7 +195,7 @@ class PaperTraderServer(object):
 							reference.delete()
 
 						else:
-							print("{}: paper {} order of {} {} at {} {} was successfully executed".format(accountId, order["orderType"].replace("-", " "), order["amountText"], ticker.get("base"), order["price"], ticker.get("quote")))
+							print(f"{accountId}: paper {order['orderType']} order of {order['amountText']} {ticker.get('base')} at {order['price']} {ticker.get('quote')} was successfully executed")
 						break
 
 		except (KeyboardInterrupt, SystemExit): pass
